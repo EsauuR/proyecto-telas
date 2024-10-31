@@ -3,16 +3,20 @@
     <div class="welcome-container">
       <!-- Barra de navegación en la parte superior derecha -->
       <div class="nav-bar">
-        <button @click="goToHome" class="nav-button">Inicio</button>
-        <button @click="goToRegister" class="nav-button">Registro</button>
-        <button @click="goToLogin" class="nav-button">Log in</button>
+        <button @click="goToHome" class="nav-button animated-button">Inicio</button>
+        <button @click="goToRegister" class="nav-button animated-button">Registro</button>
+        <button @click="goToLogin" class="nav-button animated-button">Log in</button>
       </div>
 
-      <h1 class="main-title">BIENVENIDOS A TELCOM</h1>
+      <!-- Título con cambio de color y desenfoque -->
+      <h1 class="main-title animated-title">BIENVENIDOS A TELCOM</h1>
       <h2 class="subtitle">Telas al mayor y por menor, tu mejor opción</h2>
-      <img :src="require('@/assets/telcom-logo.webp')" alt="Logo Telcom" class="logo" />
 
-      <p class="intro-text">
+      <!-- Logo con animación de pulso constante -->
+      <img :src="require('@/assets/telcom-logo.webp')" alt="Logo Telcom" class="logo pulse-logo" />
+
+      <!-- Texto centrado -->
+      <p class="intro-text centered-text">
         En TELCOM, ofrecemos una amplia variedad de telas de alta calidad para
         satisfacer todas tus necesidades. Encuentra colores, texturas y estilos
         únicos para cualquier proyecto.
@@ -24,8 +28,9 @@
         <img :src="require('@/assets/IMAGENTRES.jpg')" alt="Imagen 3" />
       </div>
 
-      <button @click="exploreCatalog" class="explore-button">Explorar Telas</button>
+      <button @click="exploreCatalog" class="explore-button animated-button">Explorar Telas</button>
 
+      <!-- Sección de información de la empresa -->
       <section class="company-info">
         <h3>Historia de la Empresa</h3>
         <p>
@@ -58,12 +63,13 @@
         <p>Teléfono: +591 60371640</p>
         <p>Correo: info@telcomfabricstore.com</p>
         <h3>Formulario de Contacto</h3>
-        <form>
+        <form @submit.prevent="submitForm">
           <input type="text" placeholder="Nombre" />
           <input type="email" placeholder="Correo Electrónico" />
           <textarea placeholder="Mensaje"></textarea>
           <button type="submit">Enviar</button>
         </form>
+        <p v-if="formSubmitted" class="confirmation-message">¡Mensaje enviado con éxito!</p>
         <h3>Síguenos:</h3>
         <div class="social-links">
           <button class="facebook">Facebook</button>
@@ -90,6 +96,11 @@
 <script>
 export default {
   name: "WelcomePage",
+  data() {
+    return {
+      formSubmitted: false,
+    };
+  },
   methods: {
     exploreCatalog() {
       this.$router.push("/telas");
@@ -102,6 +113,12 @@ export default {
     },
     goToLogin() {
       this.$router.push("/login");
+    },
+    submitForm() {
+      this.formSubmitted = true;
+      setTimeout(() => {
+        this.formSubmitted = false;
+      }, 3000); // Oculta el mensaje después de 3 segundos
     },
   },
 };
@@ -122,7 +139,49 @@ export default {
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: 20px;
-  text-align: center; /* Centrado general */
+  text-align: center;
+}
+
+/* Animación de cambio de color con desenfoque para el título */
+.animated-title {
+  font-size: 2rem;
+  font-weight: bold;
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+.animated-title:hover {
+  color: #555;
+  filter: blur(1px);
+}
+
+/* Logo con animación de pulso constante */
+.pulse-logo {
+  width: 180px;
+  margin: 20px auto;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Centrado del texto de introducción */
+.centered-text {
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Animación para botones al pasar el mouse */
+.animated-button {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.animated-button:hover {
+  background-color: #555;
+  transform: scale(1.05);
 }
 
 /* Barra de navegación */
@@ -133,6 +192,7 @@ export default {
   padding: 10px 20px;
   background-color: #f5f5f5;
   border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
 }
 
 .nav-button {
@@ -143,45 +203,14 @@ export default {
   font-size: 1rem;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
 }
 
-.nav-button:hover {
-  background-color: #555;
-}
-
-/* Títulos y logo */
-.main-title,
-.subtitle,
-.logo,
-.intro-text {
-  display: block;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.main-title {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
+/* Resto de los estilos */
 .subtitle {
   font-size: 1.5rem;
   margin-top: 5px;
 }
 
-.logo {
-  width: 180px;
-  margin: 20px auto;
-}
-
-.intro-text {
-  font-size: 1.1rem;
-  margin-top: 15px;
-  max-width: 600px; /* Ancho máximo para centrar y mejorar la legibilidad */
-}
-
-/* Galería de imágenes */
 .image-gallery {
   display: flex;
   justify-content: center;
@@ -195,7 +224,6 @@ export default {
   border-radius: 8px;
 }
 
-/* Botón de exploración */
 .explore-button {
   background-color: #333;
   color: #fff;
@@ -204,15 +232,10 @@ export default {
   cursor: pointer;
   margin-top: 20px;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
 }
 
-.explore-button:hover {
-  background-color: #555;
-}
-
-/* Información de la empresa y contacto */
-.company-info, .contact-info {
+.company-info,
+.contact-info {
   text-align: center;
   margin: 20px auto;
 }
@@ -224,24 +247,10 @@ export default {
   margin: 20px auto;
 }
 
-.contact-info form input, .contact-info form textarea {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.contact-info form button {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
+.confirmation-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
 .social-links {
@@ -249,16 +258,6 @@ export default {
   justify-content: center;
   gap: 10px;
   margin-top: 20px;
-}
-
-.social-links button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 5px;
 }
 
 .map-container {
