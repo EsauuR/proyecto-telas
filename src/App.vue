@@ -1,28 +1,19 @@
 <template>
   <div id="app">
-    <WelcomePage />
+    <router-view />
   </div>
 </template>
 
 <script>
-import WelcomePage from "./components/WelcomePage.vue";
-
 export default {
   name: "App",
-  components: {
-    WelcomePage,
-  },
 };
 </script>
 
 <style>
-/* Puedes añadir estilos generales aquí */
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
 }
 </style>
