@@ -28,7 +28,7 @@
         <img :src="require('@/assets/IMAGENTRES.jpg')" alt="Imagen 3" />
       </div>
 
-      <button @click="exploreCatalog" class="explore-button animated-button">Explorar Telas</button>
+      <button @click="openNewWindow" class="explore-button animated-button">Explorar Telas</button>
 
       <!-- Sección de información de la empresa -->
       <section class="company-info">
@@ -71,9 +71,13 @@
         </form>
         <p v-if="formSubmitted" class="confirmation-message">¡Mensaje enviado con éxito!</p>
         <h3>Síguenos:</h3>
-        <div class="social-links">
-          <button class="facebook">Facebook</button>
-          <button class="instagram">Instagram</button>
+        <div class="social-links centered-social-links">
+          <a href="https://www.facebook.com/" target="_blank" class="facebook animated-button">
+            <img :src="require('@/assets/face.webp')" alt="Facebook Logo" class="social-icon" /> Facebook
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" class="instagram animated-button">
+            <img :src="require('@/assets/insta.webp')" alt="Instagram Logo" class="social-icon" /> Instagram
+          </a>
         </div>
         <div class="map-container">
           <iframe
@@ -85,7 +89,7 @@
             loading="lazy"
           ></iframe>
         </div>
-        <a href="https://wa.me/59160371640" class="whatsapp-button">
+        <a href="https://wa.me/59160371640" class="whatsapp-button animated-button">
           <img :src="require('@/assets/wapplogo.webp')" alt="WhatsApp" /> Contáctanos por WhatsApp
         </a>
       </section>
@@ -102,8 +106,11 @@ export default {
     };
   },
   methods: {
-    exploreCatalog() {
-      this.$router.push("/telas");
+    openNewWindow() {
+      // Abre una nueva ventana con el texto "PRODUCTOS"
+      const newWindow = window.open("", "_blank");
+      newWindow.document.write("<h1 style='text-align: center; font-size: 3rem;'>PRODUCTOS</h1>");
+      newWindow.document.close();
     },
     goToHome() {
       this.$router.push("/");
@@ -125,21 +132,31 @@ export default {
 </script>
 
 <style scoped>
-/* Fondo en los laterales */
+/* Fondo en los laterales con animación */
 .page-container {
   background: url('@/assets/texture.jpg') repeat-y center center;
   background-size: cover;
   display: flex;
   justify-content: center;
+  animation: moveBackground 15s linear infinite;
+}
+
+@keyframes moveBackground {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: 100%;
+  }
 }
 
 .welcome-container {
   max-width: 800px;
   background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: 20px;
   text-align: center;
+  position: relative;
 }
 
 /* Animación de cambio de color con desenfoque para el título */
@@ -182,6 +199,23 @@ export default {
 .animated-button:hover {
   background-color: #555;
   transform: scale(1.05);
+}
+
+/* Íconos en botones de redes sociales */
+.social-links.centered-social-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.social-links .animated-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.social-icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* Barra de navegación */
@@ -251,13 +285,6 @@ export default {
   color: green;
   font-weight: bold;
   margin-top: 10px;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
 }
 
 .map-container {
