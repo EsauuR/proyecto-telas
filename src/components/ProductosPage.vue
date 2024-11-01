@@ -23,7 +23,6 @@
       <img :src="require('@/assets/producto6.jpg')" alt="Producto 6" />
       <img :src="require('@/assets/producto7.webp')" alt="Producto 7" />
       <img :src="require('@/assets/producto8.jpg')" alt="Producto 8" />
-      <img :src="require('@/assets/producto9.webp')" alt="Producto 9" />
     </div>
 
     <!-- Sección de Descripción -->
@@ -55,10 +54,10 @@ export default {
       this.$router.push("/");
     },
     goToCatalog() {
-      // Lógica para ir a una sección específica de catálogo
+      this.$router.push("/catalogo");
     },
     goToContacto() {
-      // Lógica para ir a la página de contacto
+      window.open("https://wa.me/59160371640", "_blank");
     },
   },
 };
@@ -113,19 +112,20 @@ export default {
   100% { background-position: 0% 50%; }
 }
 
-/* Galería de productos */
+/* Galería de productos con imágenes de mayor tamaño */
 .product-gallery {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
   margin: 20px auto;
 }
 
 .product-gallery img {
-  width: 200px;
-  height: auto;
-  border-radius: 8px;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
   transition: transform 0.3s ease;
 }
 
