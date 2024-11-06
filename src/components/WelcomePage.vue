@@ -17,7 +17,7 @@
 
       <!-- Texto centrado -->
       <p class="intro-text centered-text">
-        En TELCOM, ofrecemos una amplia variedad de telas de alta calidad para
+        En TELCOM de mierda, ofrecemos una amplia variedad de telas de alta calidad para
         satisfacer todas tus necesidades. Encuentra colores, texturas y estilos
         únicos para cualquier proyecto.
       </p>
