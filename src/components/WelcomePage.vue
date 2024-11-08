@@ -1,13 +1,6 @@
 <template>
   <div class="page-container">
     <div class="welcome-container">
-      <!-- Barra de navegación en la parte superior derecha -->
-      <div class="nav-bar">
-        <button @click="goToHome" class="nav-button animated-button">Inicio</button>
-        <button @click="goToRegister" class="nav-button animated-button">Registro</button>
-        <button @click="goToLogin" class="nav-button animated-button">Log in</button>
-      </div>
-
       <!-- Título con efecto Gradient Shift -->
       <h1 class="main-title gradient-shift">BIENVENIDOS A TELCOM</h1>
       <h2 class="subtitle">Telas al mayor y por menor, tu mejor opción</h2>
@@ -17,9 +10,7 @@
 
       <!-- Texto centrado -->
       <p class="intro-text centered-text">
-        En TELCOM, ofrecemos una amplia variedad de telas de alta calidad para
-        satisfacer todas tus necesidades. Encuentra colores, texturas y estilos
-        únicos para cualquier proyecto.
+        En TELCOM, ofrecemos una amplia variedad de telas de alta calidad para satisfacer todas tus necesidades. Encuentra colores, texturas y estilos únicos para cualquier proyecto.
       </p>
 
       <div class="image-gallery">
@@ -36,28 +27,16 @@
         <div class="company-info">
           <h3 class="centered-title">Historia de la Empresa</h3>
           <p>
-            TELCOM fue fundada en 1985 con la visión de convertirse en el proveedor
-            líder de telas de calidad en el mercado nacional. A lo largo de los
-            años, hemos ampliado nuestra oferta y nos hemos adaptado a las
-            tendencias, proporcionando a nuestros clientes telas innovadoras y de
-            alta calidad. Desde nuestros inicios en una pequeña tienda, hoy TELCOM
-            cuenta con una red de distribución en toda la región y es reconocida por
-            su compromiso con la calidad y la satisfacción del cliente.
+            TELCOM fue fundada en 1985 con la visión de convertirse en el proveedor líder de telas de calidad en el mercado nacional. A lo largo de los años, hemos ampliado nuestra oferta y nos hemos adaptado a las tendencias, proporcionando a nuestros clientes telas innovadoras y de alta calidad. Desde nuestros inicios en una pequeña tienda, hoy TELCOM cuenta con una red de distribución en toda la región y es reconocida por su compromiso con la calidad y la satisfacción del cliente.
           </p>
         </div>
         <div class="company-info">
           <h3 class="centered-title">Misión y Visión</h3>
           <p>
-            Proveer telas de la más alta calidad que satisfagan las necesidades y
-            expectativas de nuestros clientes, ofreciendo variedad, innovación y un
-            servicio excepcional. Nos esforzamos por ser un referente de confianza
-            en la industria textil.
+            Proveer telas de la más alta calidad que satisfagan las necesidades y expectativas de nuestros clientes, ofreciendo variedad, innovación y un servicio excepcional. Nos esforzamos por ser un referente de confianza en la industria textil.
           </p>
           <p>
-            Visión: Consolidarnos como la empresa líder en la distribución de telas
-            en América Latina, promoviendo el crecimiento sostenible y expandiendo
-            nuestra presencia en el mercado internacional, mientras seguimos
-            comprometidos con la calidad y la satisfacción de nuestros clientes.
+            Visión: Consolidarnos como la empresa líder en la distribución de telas en América Latina, promoviendo el crecimiento sostenible y expandiendo nuestra presencia en el mercado internacional, mientras seguimos comprometidos con la calidad y la satisfacción de nuestros clientes.
           </p>
         </div>
       </section>
@@ -104,22 +83,25 @@
 </template>
 
 <script>
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, logoutUser } from "@/firebase/firebaseAuthService";
+
 export default {
   name: "WelcomePage",
   data() {
     return {
       formSubmitted: false,
+      isAuthenticated: false,
     };
   },
   methods: {
-    goToHome() {
-      this.$router.push("/");
-    },
-    goToRegister() {
-      this.$router.push("/register");
-    },
-    goToLogin() {
-      this.$router.push("/login");
+    async handleLogout() {
+      try {
+        await logoutUser();
+        this.isAuthenticated = false;
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+      }
     },
     submitForm() {
       this.formSubmitted = true;
@@ -127,6 +109,11 @@ export default {
         this.formSubmitted = false;
       }, 3000); // Oculta el mensaje después de 3 segundos
     },
+  },
+  created() {
+    onAuthStateChanged(auth, (user) => {
+      this.isAuthenticated = !!user;
+    });
   },
 };
 </script>
@@ -273,26 +260,6 @@ export default {
 .social-icon {
   width: 20px;
   height: 20px;
-}
-
-.nav-bar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  padding: 10px 20px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
-
-.nav-button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
 .subtitle {
