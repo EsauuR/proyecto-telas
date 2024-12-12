@@ -1,22 +1,21 @@
 <template>
   <div class="login-page">
-    <div class="header">
-      <h1 class="system-name">Telcom</h1>
-      <img :src="require('@/assets/logo.png')" alt="Logo Telcom" class="logo" />
-    </div>
     <div class="login-container">
-      <h2>Iniciar Sesión</h2>
+      <div class="header">
+        <img :src="require('@/assets/telcom-logo.webp')" alt="Logo Telcom" class="logo" />
+        <h1 class="system-name">Telcom</h1>
+      </div>
+      <h2 class="login-title">Iniciar Sesión</h2>
       <form @submit.prevent="handleLogin">
         <div class="input-group">
           <label for="email">Correo Electrónico</label>
-          <input type="email" id="email" v-model="email" required />
+          <input type="email" id="email" v-model="email" placeholder="Ingresa tu correo electrónico" required />
         </div>
         <div class="input-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" v-model="password" required />
+          <input type="password" id="password" v-model="password" placeholder="Ingresa tu contraseña" required />
         </div>
         <button type="submit" class="login-button" :disabled="isBlocked">Ingresar</button>
-        <!-- Mensajes de error y bloqueo -->
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
         <p v-if="isBlocked" class="block-message">
           Has alcanzado el límite de intentos. Intenta nuevamente en {{ remainingTime }} segundos.
@@ -46,7 +45,7 @@ export default {
       if (!this.blockEndTime) return 0;
       const now = Date.now();
       const timeLeft = Math.ceil((this.blockEndTime - now) / 1000);
-      return timeLeft > 0 ? timeLeft : 0; // Asegurar que el tiempo restante no sea negativo
+      return timeLeft > 0 ? timeLeft : 0;
     },
   },
   methods: {
@@ -56,7 +55,6 @@ export default {
       try {
         await loginUser(this.email, this.password);
 
-        // Restablecer intentos fallidos al iniciar sesión con éxito
         this.failedAttempts = 0;
         localStorage.removeItem("failedAttempts");
         localStorage.removeItem("blockEndTime");
@@ -77,40 +75,35 @@ export default {
     },
     blockUser() {
       this.isBlocked = true;
-      this.blockEndTime = Date.now() + 60000; // Bloqueo por 60 segundos
+      this.blockEndTime = Date.now() + 60000;
       localStorage.setItem("blockEndTime", this.blockEndTime);
-
-      // Configurar temporizador para actualizar la cuenta regresiva cada segundo
       this.startTimer();
     },
     startTimer() {
-      if (this.timer) clearInterval(this.timer); // Limpiar cualquier temporizador previo
+      if (this.timer) clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (this.remainingTime <= 0) {
           this.unblockUser();
         }
-      }, 1000); // Actualizar cada segundo
+      }, 1000);
     },
     unblockUser() {
-      clearInterval(this.timer); // Limpiar el temporizador
+      clearInterval(this.timer);
       this.isBlocked = false;
       this.blockEndTime = null;
       this.failedAttempts = 0;
-      this.errorMessage = ""; // Limpiar mensajes de error
+      this.errorMessage = "";
       localStorage.removeItem("blockEndTime");
       localStorage.removeItem("failedAttempts");
     },
   },
   mounted() {
-    // Restaurar estado desde localStorage
     const storedBlockEndTime = localStorage.getItem("blockEndTime");
     const storedFailedAttempts = localStorage.getItem("failedAttempts");
 
     if (storedBlockEndTime && Date.now() < storedBlockEndTime) {
       this.blockEndTime = parseInt(storedBlockEndTime, 10);
       this.isBlocked = true;
-
-      // Configurar el temporizador si está bloqueado
       this.startTimer();
     }
 
@@ -119,87 +112,107 @@ export default {
     }
   },
   beforeUnmount() {
-    if (this.timer) clearInterval(this.timer); // Limpieza al desmontar el componente
+    if (this.timer) clearInterval(this.timer);
   },
 };
 </script>
 
 <style scoped>
-/* Estilos para la página de inicio de sesión */
 .login-page {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100vh;
+  background: black; /* Fondo negro */
+  padding-top: 50px;
+}
+
+.login-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  height: 100vh;
-  justify-content: center;
-  background-color: #f8f9fa;
+  margin-bottom: 0; /* Elimina espacio inferior */
 }
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 20px;
+
+.logo {
+  width: 70px;
+  margin: 0; /* Elimina márgenes */
+  padding: 0; /* Elimina cualquier relleno */
 }
+
 .system-name {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #333;
-  margin: 0;
+  color: white;
+  margin-top: -5px; /* Ajusta la separación entre logo y texto */
 }
-.logo {
-  width: 40px;
-  height: auto;
+
+.login-title {
+  font-size: 1.4rem;
+  color: #374151;
+  margin-bottom: 15px; /* Reducido */
 }
-.login-container {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+
 .input-group {
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   text-align: left;
 }
+
 .input-group label {
-  display: block;
   font-weight: bold;
-  margin-bottom: 5px;
+  color: #374151;
+  margin-bottom: 4px;
 }
+
 .input-group input {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
+
 .login-button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  font-size: 1rem;
   color: white;
+  background-color: #000;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
+.login-button:hover {
+  background-color: #333;
+}
+
 .login-button:disabled {
-  background-color: #cccccc;
+  background-color: #9ca3af;
   cursor: not-allowed;
 }
+
 .error-message {
   color: red;
-  font-size: 14px;
-  margin-top: 10px;
+  margin-top: 8px;
+  font-size: 0.85rem;
 }
+
 .block-message {
   color: #555;
-  font-size: 14px;
-  margin-top: 10px;
+  margin-top: 8px;
+  font-size: 0.85rem;
 }
 </style>
